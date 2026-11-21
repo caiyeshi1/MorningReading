@@ -36,3 +36,6 @@ dist/
 *.log
 .DS_Store
 Thumbs.db
+
+# 本地开发说明（不提交）
+README.dev.md
