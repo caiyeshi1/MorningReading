@@ -373,7 +373,7 @@ export struct SettingsPanel {
                 .fontSize(14)
                 .fontColor(INK)
               Blank()
-              Text('0.1.0')
+              Text('0.1.1')
                 .fontSize(12)
                 .fontColor(SUB)
             }

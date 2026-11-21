@@ -7,15 +7,21 @@
 - 顶部列表 + 底部悬浮播放条，展开为完整播放器
 - 适配折叠屏：展开时自动变为「左列表 + 右播放器」双栏
 
-> 版本 0.1.0 · 基于 HarmonyOS/OpenHarmony SDK API 26（Stage 模型）
+> 版本 0.1.1 · 基于 HarmonyOS/OpenHarmony SDK API 26（Stage 模型）
 
 ## 下载
 
-- **未签名 HAP（0.1.0）**：[MorningReading-0.1.0-unsigned.hap](https://github.com/caiyeshi1/MorningReading/releases/download/v0.1.0/MorningReading-0.1.0-unsigned.hap)
+- **未签名 HAP（0.1.1）**：[MorningReading-0.1.1-unsigned.hap](https://github.com/caiyeshi1/MorningReading/releases/download/v0.1.1/MorningReading-0.1.1-unsigned.hap)
+- 历史版本（0.1.0）：[v0.1.0](https://github.com/caiyeshi1/MorningReading/releases/tag/v0.1.0)
 - 全部版本：[Releases 页面](https://github.com/caiyeshi1/MorningReading/releases)
 
 > 未签名包（`entry-default-unsigned.hap`）不能直接安装，需要先用你自己的证书签名：
 > DevEco Studio 的「自动生成签名」或 `hap-sign-tool` 均可。
+
+## 更新日志
+
+- **0.1.1**：新增深色模式（跟随系统 / 浅色 / 深色）；设置、分组、播放面板改用系统 `bindSheet` 并接入沉浸光感材质；弹窗与 Toast 支持系统材质。
+- **0.1.0**：首个版本，支持本地音频导入、分组、批量管理、自定义背景、设置页、沉浸式全屏与悬浮播放条。
 
 ---
 
