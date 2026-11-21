@@ -9,6 +9,14 @@
 
 > 版本 0.1.0 · 基于 HarmonyOS/OpenHarmony SDK API 26（Stage 模型）
 
+## 下载
+
+- **未签名 HAP（0.1.0）**：[MorningReading-0.1.0-unsigned.hap](https://github.com/caiyeshi1/MorningReading/releases/download/v0.1.0/MorningReading-0.1.0-unsigned.hap)
+- 全部版本：[Releases 页面](https://github.com/caiyeshi1/MorningReading/releases)
+
+> 未签名包（`entry-default-unsigned.hap`）不能直接安装，需要先用你自己的证书签名：
+> DevEco Studio 的「自动生成签名」或 `hap-sign-tool` 均可。
+
 ---
 
 ## 功能
