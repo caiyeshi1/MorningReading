@@ -37,6 +37,8 @@ export struct SettingsPanel {
   };
   onImport: () => void = () => {
   };
+  onDownloadImport: () => void = () => {
+  };
 
   aboutToAppear(): void {
     this.ticker = setInterval(() => {
@@ -160,6 +162,8 @@ export struct SettingsPanel {
         this.onGroups();
       } else if (kind === 'batch') {
         this.onBatch();
+      } else if (kind === 'download') {
+        this.onDownloadImport();
       }
     })
   }
@@ -341,6 +345,8 @@ export struct SettingsPanel {
 
           Column() {
             this.LibRow('导入音频', `${this.trackCount()} 首`, 'import')
+            Divider().color($r('app.color.divider'))
+            this.LibRow('从 Download 导入', '扫描 晨读美文 文件夹', 'download')
             Divider().color($r('app.color.divider'))
             this.LibRow('管理分组', `${this.groupCount()} 个`, 'groups')
             Divider().color($r('app.color.divider'))

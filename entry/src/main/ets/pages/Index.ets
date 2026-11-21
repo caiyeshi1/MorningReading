@@ -172,6 +172,66 @@ struct Index {
     return BackgroundStore.get().path;
   }
 
+  private importMenu(): MenuElement[] {
+    return [
+      {
+        value: '从文件选择',
+        action: () => {
+          this.importAudio();
+        }
+      },
+      {
+        value: '从 Download 导入',
+        action: () => {
+          this.importFromDownload();
+        }
+      }
+    ];
+  }
+
+  /** 扫描 Download/晨读美文；无权限时回退到文件夹选择器 */
+  private async importFromDownload(): Promise<void> {
+    try {
+      const count: number = await LibraryStore.get().importFromDownload();
+      if (count >= 0) {
+        promptAction.showToast({
+          message: count > 0 ? `已从 Download 导入 ${count} 首` : 'Download 文件夹里没有可导入的音频',
+          systemMaterial: immersiveToast()
+        });
+        return;
+      }
+      await this.pickDownloadFolder();
+    } catch (e) {
+      const err = e as BusinessError;
+      hilog.error(DOMAIN, TAG, 'import from download failed %{public}s', err.message);
+      promptAction.showToast({ message: '导入失败，请重试', systemMaterial: immersiveToast() });
+    }
+  }
+
+  private async pickDownloadFolder(): Promise<void> {
+    try {
+      const ctx = getContext(this) as common.UIAbilityContext;
+      const viewPicker: picker.DocumentViewPicker = new picker.DocumentViewPicker(ctx);
+      const opts: picker.DocumentSelectOptions = {
+        maxSelectNumber: 1,
+        selectMode: picker.DocumentSelectMode.FOLDER
+      };
+      const uris: string[] = await viewPicker.select(opts);
+      if (uris.length === 0) {
+        return;
+      }
+      const count: number = await LibraryStore.get().importFromFolderUri(uris[0]);
+      promptAction.showToast({
+        message: count > 0 ? `已导入 ${count} 首` : '该文件夹里没有可导入的音频',
+        systemMaterial: immersiveToast()
+      });
+    } catch (e) {
+      const err = e as BusinessError;
+      hilog.error(DOMAIN, TAG, 'pick folder failed %{public}s', err.message);
+      promptAction.showToast({ message: '导入失败，请重试', systemMaterial: immersiveToast() });
+    }
+  }
+
   private async importAudio(): Promise<void> {
     try {
       const ctx = getContext(this) as common.UIAbilityContext;
@@ -496,9 +556,7 @@ struct Index {
           .padding({ left: 10, right: 10, top: 6, bottom: 6 })
           .borderRadius(12)
           .backgroundColor(ACCENT)
-          .onClick(() => {
-            this.importAudio();
-          })
+          .bindMenu(this.importMenu())
       }
       .width('100%')
       .padding({ left: 20, right: 20, top: 16 + this.avoidTop, bottom: 12 })
@@ -721,6 +779,10 @@ struct Index {
           onImport: () => {
             this.sheetShown = false;
             this.importAudio();
+          },
+          onDownloadImport: () => {
+            this.sheetShown = false;
+            this.importFromDownload();
           }
         })
       }
