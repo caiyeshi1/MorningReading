@@ -1,4 +1,4 @@
-import common from '@ohos.app.ability.common';
+﻿import common from '@ohos.app.ability.common';
 import window from '@ohos.window';
 import picker from '@ohos.file.picker';
 import promptAction from '@ohos.promptAction';
@@ -7,6 +7,7 @@ import { BusinessError } from '@ohos.base';
 import { AudioService } from '../common/AudioService';
 import { ALL_GROUP_ID, Group, LibraryStore, Track } from '../common/Library';
 import { BackgroundStore } from '../common/BackgroundStore';
+import { ThemeStore } from '../common/ThemeStore';
 import { MiniPlayer } from '../view/MiniPlayer';
 import { PlayerPanel } from '../view/PlayerPanel';
 import { GroupManager } from '../view/GroupManager';
@@ -15,10 +16,10 @@ import { PlayingBars } from '../view/PlayingBars';
 
 const DOMAIN: number = 0x0100;
 const TAG: string = 'Index';
-const ACCENT: string = '#1F6FB2';
-const INK: string = '#1B2A41';
-const SUB: string = '#8A93A6';
-const COLORS: string[] = ['#1F6FB2', '#6A4C93', '#C1651A', '#2E7D64', '#B23A48', '#4A5FA5'];
+const ACCENT: Resource = $r('app.color.accent');
+const INK: Resource = $r('app.color.text_primary');
+const SUB: Resource = $r('app.color.text_secondary');
+const COLORS: Resource[] = [$r('app.color.accent'), $r('app.color.accent_purple'), $r('app.color.accent_orange'), $r('app.color.accent_green'), $r('app.color.accent_red'), $r('app.color.chip_brand')];
 
 @Entry
 @Component
@@ -44,6 +45,7 @@ struct Index {
     const ctx = getContext(this) as common.UIAbilityContext;
     AudioService.get().init(ctx);
     BackgroundStore.get().init(ctx);
+    ThemeStore.get().init(ctx);
     this.observeWindow();
   }
 
@@ -138,7 +140,7 @@ struct Index {
     return LibraryStore.get().tracks.length;
   }
 
-  private colorOf(groupId: string): string {
+  private colorOf(groupId: string): Resource {
     const list: Group[] = this.groups();
     for (let i = 0; i < list.length; i++) {
       if (list[i].id === groupId) {
@@ -309,7 +311,7 @@ struct Index {
       },
       secondaryButton: {
         value: '删除',
-        fontColor: '#C1651A',
+        fontColor: $r('app.color.accent_orange'),
         action: () => {
           this.deleteSelected();
         }
@@ -359,7 +361,7 @@ struct Index {
         Text(this.badgeOf(item))
           .fontSize(16)
           .fontWeight(FontWeight.Bold)
-          .fontColor('#FFFFFF')
+          .fontColor($r('app.color.text_on_accent'))
       }
       .width(46)
       .height(46)
@@ -390,14 +392,14 @@ struct Index {
           if (this.isSelected(item.id)) {
             SymbolGlyph($r('sys.symbol.checkmark'))
               .fontSize(14)
-              .fontColor(['#FFFFFF'])
+              .fontColor([$r('app.color.text_on_accent')])
           }
         }
         .width(24)
         .height(24)
         .borderRadius(12)
-        .backgroundColor(this.isSelected(item.id) ? ACCENT : '#FFFFFF')
-        .border({ width: 1.5, color: this.isSelected(item.id) ? ACCENT : '#CBD5E1' })
+        .backgroundColor(this.isSelected(item.id) ? ACCENT : $r('app.color.bg_card'))
+        .border({ width: 1.5, color: this.isSelected(item.id) ? ACCENT : $r('app.color.border_chip') })
       } else if (item.id === this.curId) {
         if (this.playing) {
           PlayingBars({ active: true })
@@ -411,15 +413,15 @@ struct Index {
           .width(30)
           .height(30)
           .borderRadius(15)
-          .backgroundColor('#E8F1FA')
+          .backgroundColor($r('app.color.accent_soft'))
         }
       }
     }
     .width('100%')
     .padding(12)
     .borderRadius(16)
-    .backgroundColor(this.selecting && this.isSelected(item.id) ? '#E4EFFF'
-      : (item.id === this.curId ? '#EAF3FF' : '#FFFFFF'))
+    .backgroundColor(this.selecting && this.isSelected(item.id) ? $r('app.color.bg_selected_strong')
+      : (item.id === this.curId ? $r('app.color.bg_selected') : $r('app.color.bg_card')))
     .animation({ duration: 220, curve: Curve.EaseOut })
     .onClick(() => {
       if (this.selecting) {
@@ -439,23 +441,23 @@ struct Index {
           Text(`已选 ${this.selectedIds.length} 项`)
             .fontSize(20)
             .fontWeight(FontWeight.Bold)
-            .fontColor('#1F3A5F')
+            .fontColor($r('app.color.text_brand'))
           Blank()
           Text('全选')
             .fontSize(12)
             .fontColor(ACCENT)
             .padding({ left: 12, right: 12, top: 7, bottom: 7 })
             .borderRadius(12)
-            .backgroundColor('#FFFFFF')
+            .backgroundColor($r('app.color.bg_card'))
             .onClick(() => {
               this.selectAll();
             })
           Text('完成')
             .fontSize(12)
-            .fontColor('#FFFFFF')
+            .fontColor($r('app.color.text_on_accent'))
             .padding({ left: 12, right: 12, top: 7, bottom: 7 })
             .borderRadius(12)
-            .backgroundColor('#1F3A5F')
+            .backgroundColor($r('app.color.chip_brand'))
             .onClick(() => {
               this.exitSelect();
             })
@@ -468,7 +470,7 @@ struct Index {
           Text('晨读美文')
             .fontSize(24)
             .fontWeight(FontWeight.Bold)
-            .fontColor('#1F3A5F')
+            .fontColor($r('app.color.text_brand'))
             .maxLines(1)
             .textOverflow({ overflow: TextOverflow.Ellipsis })
           Text('本地音频 · 离线播放')
@@ -482,17 +484,17 @@ struct Index {
 
         Text('设置')
           .fontSize(11)
-          .fontColor('#5B6878')
+          .fontColor($r('app.color.text_body'))
           .padding({ left: 9, right: 9, top: 6, bottom: 6 })
           .borderRadius(12)
-          .backgroundColor('#FFFFFF')
+          .backgroundColor($r('app.color.bg_card'))
           .onClick(() => {
             this.showSettings = true;
           })
 
         Text('+ 导入')
           .fontSize(11)
-          .fontColor('#FFFFFF')
+          .fontColor($r('app.color.text_on_accent'))
           .padding({ left: 10, right: 10, top: 6, bottom: 6 })
           .borderRadius(12)
           .backgroundColor(ACCENT)
@@ -507,8 +509,10 @@ struct Index {
       TextInput({ placeholder: '搜索音频名称', text: this.keyword })
         .height(42)
         .borderRadius(14)
-        .backgroundColor('#FFFFFF')
+        .backgroundColor($r('app.color.bg_card'))
         .fontSize(14)
+        .fontColor($r('app.color.text_primary'))
+        .placeholderColor($r('app.color.text_secondary'))
         .padding({ left: 14, right: 14 })
         .margin({ left: 20, right: 20 })
         .onChange((value: string) => {
@@ -519,10 +523,10 @@ struct Index {
         Row({ space: 8 }) {
           Text(`全部 ${this.totalCount()}`)
             .fontSize(12)
-            .fontColor(this.activeGroup() === ALL_GROUP_ID ? '#FFFFFF' : '#5B6878')
+            .fontColor(this.activeGroup() === ALL_GROUP_ID ? $r('app.color.text_on_accent') : $r('app.color.text_body'))
             .padding({ left: 14, right: 14, top: 7, bottom: 7 })
             .borderRadius(14)
-            .backgroundColor(this.activeGroup() === ALL_GROUP_ID ? '#1F3A5F' : '#FFFFFF')
+            .backgroundColor(this.activeGroup() === ALL_GROUP_ID ? $r('app.color.chip_brand') : $r('app.color.bg_card'))
             .animation({ duration: 200, curve: Curve.EaseOut })
             .onClick(() => {
               this.groupId = ALL_GROUP_ID;
@@ -530,10 +534,10 @@ struct Index {
           ForEach(this.groups(), (item: Group) => {
             Text(`${item.name} ${LibraryStore.get().countOf(item.id)}`)
               .fontSize(12)
-              .fontColor(this.activeGroup() === item.id ? '#FFFFFF' : '#5B6878')
+              .fontColor(this.activeGroup() === item.id ? $r('app.color.text_on_accent') : $r('app.color.text_body'))
               .padding({ left: 14, right: 14, top: 7, bottom: 7 })
               .borderRadius(14)
-              .backgroundColor(this.activeGroup() === item.id ? '#1F3A5F' : '#FFFFFF')
+              .backgroundColor(this.activeGroup() === item.id ? $r('app.color.chip_brand') : $r('app.color.bg_card'))
               .animation({ duration: 200, curve: Curve.EaseOut })
               .onClick(() => {
                 this.groupId = item.id;
@@ -559,7 +563,7 @@ struct Index {
             .padding({ left: 40, right: 40 })
           Text('导入后可长按音频，移动到自定义分组')
             .fontSize(12)
-            .fontColor('#B9C2CE')
+            .fontColor($r('app.color.text_muted'))
         }
         .layoutWeight(1)
         .justifyContent(FlexAlign.Center)
@@ -571,7 +575,7 @@ struct Index {
             .fontColor(SUB)
           Text('换个关键词或分组试试')
             .fontSize(12)
-            .fontColor('#B9C2CE')
+            .fontColor($r('app.color.text_muted'))
         }
         .layoutWeight(1)
         .justifyContent(FlexAlign.Center)
@@ -614,7 +618,7 @@ struct Index {
         Column()
           .width('100%')
           .height('100%')
-          .backgroundColor('rgba(244,246,250,0.25)')
+          .backgroundColor($r('app.color.bg_scrim'))
       }
 
       Row() {
@@ -640,7 +644,7 @@ struct Index {
           }
           .width('42%')
           .height('100%')
-          .backgroundColor('#FFFFFF')
+          .backgroundColor($r('app.color.bg_card'))
         }
       }
       .width('100%')
@@ -650,7 +654,7 @@ struct Index {
         Row({ space: 10 }) {
           Text('移动到分组')
             .fontSize(14)
-            .fontColor('#FFFFFF')
+            .fontColor($r('app.color.text_on_accent'))
             .textAlign(TextAlign.Center)
             .layoutWeight(1)
             .padding({ top: 12, bottom: 12 })
@@ -659,12 +663,12 @@ struct Index {
             .bindMenu(this.moveMenu())
           Text('删除')
             .fontSize(14)
-            .fontColor('#C1651A')
+            .fontColor($r('app.color.accent_orange'))
             .textAlign(TextAlign.Center)
             .layoutWeight(1)
             .padding({ top: 12, bottom: 12 })
             .borderRadius(20)
-            .backgroundColor('#FBE9E0')
+            .backgroundColor($r('app.color.accent_orange_soft'))
             .onClick(() => {
               this.confirmDeleteSelected();
             })
@@ -672,7 +676,7 @@ struct Index {
         .width('calc(100% - 24vp)')
         .padding({ left: 10, right: 10, top: 8, bottom: 8 })
         .borderRadius(24)
-        .backgroundColor('#FFFFFF')
+        .backgroundColor($r('app.color.bg_card'))
         .shadow({ radius: 18, color: 'rgba(31,58,95,0.16)', offsetY: 4 })
         .margin({ left: 12, right: 12, bottom: 12 + this.avoidBottom })
         .transition(TransitionEffect.OPACITY
@@ -701,7 +705,7 @@ struct Index {
         }
         .width('100%')
         .height('100%')
-        .backgroundColor('#FFFFFF')
+        .backgroundColor($r('app.color.bg_card'))
         .borderRadius({ topLeft: 26, topRight: 26 })
         .scrollBar(BarState.Off)
         .transition(TransitionEffect.move(TransitionEdge.BOTTOM)
@@ -714,7 +718,7 @@ struct Index {
           Column()
             .width('100%')
             .height('100%')
-            .backgroundColor('rgba(15,26,45,0.35)')
+            .backgroundColor($r('app.color.bg_dim'))
             .onClick(() => {
               this.showGroups = false;
             })
@@ -741,7 +745,7 @@ struct Index {
           Column()
             .width('100%')
             .height('100%')
-            .backgroundColor('rgba(15,26,45,0.35)')
+            .backgroundColor($r('app.color.bg_dim'))
             .onClick(() => {
               this.showSettings = false;
             })
@@ -777,6 +781,6 @@ struct Index {
     }
     .width('100%')
     .height('100%')
-    .backgroundColor('#F3F5F9')
+    .backgroundColor($r('app.color.bg_page'))
   }
 }

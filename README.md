@@ -18,7 +18,8 @@
 | 自定义分组 | 「设置 → 管理分组」浮层可新增 / 重命名 / 删除分组；删除时组内音频回到默认分组 |
 | **批量管理** | 「设置 → 批量管理」进入多选态：点卡片勾选、顶部「全选 / 完成」、底部「移动到分组 / 删除」，删除有二次确认 |
 | **自定义背景** | 「设置 → 应用背景」选择相册图片（复制到沙箱）或恢复默认；图片全屏铺底 + 模糊 + 半透明蒙版（0.25） |
-| **设置页** | 头部「设置」打开统一设置面板：播放（自动连播 / 倍速 / 睡眠定时）、外观（背景）、音频库（导入 / 分组 / 批量）、关于（版本、数量） |
+| **设置页** | 头部「设置」打开统一设置面板：播放（自动连播 / 倍速 / 睡眠定时）、外观（深色模式 / 背景）、音频库（导入 / 分组 / 批量）、关于（版本、数量） |
+| **深色模式** | 跟随系统 / 始终浅色 / 始终深色；全部界面色值走颜色资源，esources/dark 提供深色配色，切换即时生效 |
 | 音频列表 | 首字母色块、标题、所属分组、时长；点一下播放，再点暂停；长按可移动分组 / 删除 |
 | 搜索 | 按音频名称关键词实时过滤 |
 | 分组筛选 | 「全部 N」+ 各分组胶囊，显示每组数量 |
@@ -61,7 +62,7 @@ Stack（全屏，含自定义背景层）
 ├── 全屏播放器（底部滑入，单栏时）
 ├── 设置面板（底部滑入，92% 高度）
 │   ├── 播放：自动连播 / 倍速 / 睡眠定时
-│   ├── 外观：应用背景（选择图片 / 恢复默认）
+│   ├── 外观：深色模式（跟随系统 / 浅色 / 深色）、应用背景（选择图片 / 恢复默认）
 │   ├── 音频库：导入音频 / 管理分组 / 批量管理
 │   └── 关于：应用、版本、数量
 └── 分组管理浮层（淡入 + 上移）
@@ -198,6 +199,14 @@ this.sleepTimer = setTimeout(() => this.pause(), minutes * 60 * 1000);
 if (this.bMs > this.aMs && this.aMs > 0 && time >= this.bMs) { this.seekTo(this.aMs); }
 ```
 
+### 7. 深色模式（`common/ThemeStore.ets`）
+
+- 界面所有颜色改为资源引用：`$r('app.color.bg_page')`、`text_primary`、`accent` 等；
+- `resources/base/element/color.json` 为浅色，`resources/dark/element/color.json` 同名覆盖；
+- 三档：`system`（跟随系统）/ `light` / `dark`，通过 `getApplicationContext().setColorMode(...)` 切换，
+  资源与组件即时重绘；状态栏/导航栏图标颜色同步切换（深色用白图标）；
+- 选择存 `preferences('reading_theme')` 的 `themeMode`，UI 用 `@StorageLink('themeMode')` 订阅。
+
 ---
 
 ## 六、目录结构
@@ -220,15 +229,18 @@ MorningReading/
         │   ├── entryability/EntryAbility.ets   # 沉浸式全屏 + 系统栏透明
         │   ├── common/Library.ets              # 音频库 / 分组 / 批量 / 导入 / 持久化
         │   ├── common/BackgroundStore.ets      # 自定义背景
+        │   ├── common/ThemeStore.ets           # 深色模式（system / light / dark）
         │   ├── common/AudioService.ets         # 播放 / 会话 / 长时任务 / 续播 / 定时 / 复读
         │   ├── view/MiniPlayer.ets             # 悬浮药丸迷你条
         │   ├── view/PlayerPanel.ets            # 全屏播放器
-│   ├── view/GroupManager.ets           # 分组管理浮层
-│   ├── view/SettingsPanel.ets          # 设置面板（播放 / 外观 / 音频库 / 关于）
-│   ├── view/PlayingBars.ets            # 播放中跳动柱
+        │   ├── view/GroupManager.ets           # 分组管理浮层
+        │   ├── view/SettingsPanel.ets          # 设置面板（播放 / 外观 / 音频库 / 关于）
+        │   ├── view/PlayingBars.ets            # 播放中跳动柱
         │   └── pages/Index.ets                 # 列表 / 搜索 / 筛选 / 批量 / 背景 / 布局
         └── resources/
-            ├── base/element/  base/media/  base/profile/
+            ├── base/element/color.json         # 浅色配色（bg_page / bg_card / accent …）
+            ├── dark/element/color.json         # 深色配色（同名覆盖）
+            ├── base/media/  base/profile/
             └── rawfile/                        # 空（不内置音频）
 ```
 

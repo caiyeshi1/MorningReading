@@ -1,4 +1,4 @@
-const ACCENT: string = '#1F6FB2';
+const ACCENT: Resource = $r('app.color.accent');
 
 const PATTERN: number[][] = [
   [10, 16, 7],

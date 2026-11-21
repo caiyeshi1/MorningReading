@@ -1,8 +1,8 @@
-import { AudioService } from '../common/AudioService';
+﻿import { AudioService } from '../common/AudioService';
 
-const ACCENT: string = '#1F6FB2';
-const INK: string = '#1B2A41';
-const SUB: string = '#8A93A6';
+const ACCENT: Resource = $r('app.color.accent');
+const INK: Resource = $r('app.color.text_primary');
+const SUB: Resource = $r('app.color.text_secondary');
 const SPEEDS: string[] = ['0.75×', '1.0×', '1.25×', '1.75×'];
 const SLEEPS: number[] = [0, 15, 30, 45, 60];
 
@@ -63,15 +63,15 @@ export struct PlayerPanel {
     return `${m}:${s < 10 ? '0' : ''}${s}`;
   }
 
-  private coverColor(): string {
+  private coverColor(): Resource {
     const idx: number = this.curNo % 3;
     if (idx === 1) {
-      return '#6A4C93';
+      return $r('app.color.accent_purple');
     }
     if (idx === 2) {
-      return '#C1651A';
+      return $r('app.color.accent_orange');
     }
-    return '#1F6FB2';
+    return $r('app.color.accent');
   }
 
   @Builder
@@ -90,7 +90,7 @@ export struct PlayerPanel {
     .width(52)
     .height(52)
     .borderRadius(26)
-    .backgroundColor('#F1F4F9')
+    .backgroundColor($r('app.color.bg_chip'))
     .onClick(() => {
       if (isNext) {
         AudioService.get().next();
@@ -107,7 +107,7 @@ export struct PlayerPanel {
       .fontColor(SUB)
       .padding({ left: 10, right: 10, top: 8, bottom: 8 })
       .borderRadius(12)
-      .backgroundColor('#F7F9FC')
+      .backgroundColor($r('app.color.bg_card_alt'))
       .onClick(() => {
         AudioService.get().seekRelative(delta);
       })
@@ -118,10 +118,10 @@ export struct PlayerPanel {
     Text(label)
       .fontSize(12)
       .fontWeight(FontWeight.Medium)
-      .fontColor(active ? '#FFFFFF' : '#5B6878')
+      .fontColor(active ? $r('app.color.text_on_accent') : $r('app.color.text_body'))
       .padding({ left: 14, right: 14, top: 6, bottom: 6 })
       .borderRadius(10)
-      .backgroundColor(active ? '#C1651A' : '#F1F4F9')
+      .backgroundColor(active ? $r('app.color.accent_orange') : $r('app.color.bg_chip'))
       .onClick(() => {
         AudioService.get().setAB(label === 'A' ? 'a' : 'b');
       })
@@ -143,7 +143,7 @@ export struct PlayerPanel {
         .padding({ left: 20, right: 20, top: 14 })
 
         Row() {
-          Blank().width(44).height(5).borderRadius(3).backgroundColor('#D9DFE9')
+          Blank().width(44).height(5).borderRadius(3).backgroundColor($r('app.color.track'))
         }
         .width('100%')
         .justifyContent(FlexAlign.Center)
@@ -154,7 +154,7 @@ export struct PlayerPanel {
         Text(this.badge())
           .fontSize(30)
           .fontWeight(FontWeight.Bold)
-          .fontColor('#FFFFFF')
+          .fontColor($r('app.color.text_on_accent'))
       }
       .width(this.inSheet ? 132 : 116)
       .height(this.inSheet ? 132 : 116)
@@ -187,7 +187,7 @@ export struct PlayerPanel {
         .width('86%')
         .blockColor(ACCENT)
         .selectedColor(ACCENT)
-        .trackColor('#E3E8F0')
+        .trackColor($r('app.color.track'))
         .margin({ top: 18 })
         .onChange((value: number, mode: SliderChangeMode) => {
           this.dragPos = value;
@@ -218,11 +218,11 @@ export struct PlayerPanel {
           if (this.playing) {
             SymbolGlyph($r('sys.symbol.pause'))
               .fontSize(32)
-              .fontColor(['#FFFFFF'])
+              .fontColor([$r('app.color.text_on_accent')])
           } else {
             SymbolGlyph($r('sys.symbol.play_fill'))
               .fontSize(34)
-              .fontColor(['#FFFFFF'])
+              .fontColor([$r('app.color.text_on_accent')])
           }
         }
         .width(74)
@@ -245,10 +245,10 @@ export struct PlayerPanel {
         ForEach(SPEEDS, (label: string, idx: number) => {
           Text(label)
             .fontSize(12)
-            .fontColor(this.speedIdx === idx ? '#FFFFFF' : '#5B6878')
+            .fontColor(this.speedIdx === idx ? $r('app.color.text_on_accent') : $r('app.color.text_body'))
             .padding({ left: 12, right: 12, top: 7, bottom: 7 })
             .borderRadius(12)
-            .backgroundColor(this.speedIdx === idx ? ACCENT : '#F1F4F9')
+            .backgroundColor(this.speedIdx === idx ? ACCENT : $r('app.color.bg_chip'))
             .animation({ duration: 180, curve: Curve.EaseOut })
             .onClick(() => {
               AudioService.get().setSpeedIndex(idx);
@@ -269,7 +269,7 @@ export struct PlayerPanel {
           .fontColor(SUB)
           .padding({ left: 10, right: 10, top: 6, bottom: 6 })
           .borderRadius(10)
-          .backgroundColor('#F7F9FC')
+          .backgroundColor($r('app.color.bg_card_alt'))
           .onClick(() => {
             AudioService.get().setAB('clear');
           })
@@ -283,7 +283,7 @@ export struct PlayerPanel {
           ? `A ${this.timeText(this.abA)} → B ${this.timeText(this.abB)}，循环复读中`
           : `A 点 ${this.timeText(this.abA)}，再点 B 设定终点`)
           .fontSize(11)
-          .fontColor('#C1651A')
+          .fontColor($r('app.color.accent_orange'))
           .margin({ top: 6 })
       }
 
@@ -295,10 +295,10 @@ export struct PlayerPanel {
         ForEach(SLEEPS, (min: number, idx: number) => {
           Text(min === 0 ? '关' : `${min}′`)
             .fontSize(12)
-            .fontColor(this.sleepMin === min ? '#FFFFFF' : '#5B6878')
+            .fontColor(this.sleepMin === min ? $r('app.color.text_on_accent') : $r('app.color.text_body'))
             .padding({ left: 12, right: 12, top: 6, bottom: 6 })
             .borderRadius(10)
-            .backgroundColor(this.sleepMin === min ? '#1F3A5F' : '#F1F4F9')
+            .backgroundColor(this.sleepMin === min ? $r('app.color.chip_brand') : $r('app.color.bg_chip'))
             .onClick(() => {
               AudioService.get().setSleep(min);
             })
@@ -318,7 +318,7 @@ export struct PlayerPanel {
       Row() {
         Text('自动连播下一篇')
           .fontSize(13)
-          .fontColor('#5B6878')
+          .fontColor($r('app.color.text_body'))
         Blank()
         Toggle({ type: ToggleType.Switch, isOn: this.autoNext })
           .selectedColor(ACCENT)

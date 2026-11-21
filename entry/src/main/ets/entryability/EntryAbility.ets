@@ -1,6 +1,7 @@
-import UIAbility from '@ohos.app.ability.UIAbility';
+﻿import UIAbility from '@ohos.app.ability.UIAbility';
 import AbilityConstant from '@ohos.app.ability.AbilityConstant';
 import Want from '@ohos.app.ability.Want';
+import ConfigurationConstant from '@ohos.app.ability.ConfigurationConstant';
 import window from '@ohos.window';
 import hilog from '@ohos.hilog';
 import { BusinessError } from '@ohos.base';
@@ -33,17 +34,24 @@ export default class EntryAbility extends UIAbility {
       win.setWindowLayoutFullScreen(true).catch((e: BusinessError) => {
         hilog.warn(DOMAIN, TAG, 'setWindowLayoutFullScreen failed %{public}s', e.message);
       });
-      const props: window.SystemBarProperties = {
-        statusBarColor: '#00000000',
-        navigationBarColor: '#00000000',
-        statusBarContentColor: '#1B2A41',
-        navigationBarContentColor: '#1B2A41'
-      };
-      win.setWindowSystemBarProperties(props).catch((e: BusinessError) => {
-        hilog.warn(DOMAIN, TAG, 'setWindowSystemBarProperties failed %{public}s', e.message);
-      });
+      const dark: boolean = this.context.config.colorMode
+        === ConfigurationConstant.ColorMode.COLOR_MODE_DARK;
+      this.applySystemBars(win, dark);
     }).catch((e: BusinessError) => {
       hilog.warn(DOMAIN, TAG, 'getMainWindow failed %{public}s', e.message);
+    });
+  }
+
+  private applySystemBars(win: window.Window, dark: boolean): void {
+    const content: string = dark ? '#FFFFFF' : '#1B2A41';
+    const props: window.SystemBarProperties = {
+      statusBarColor: '#00000000',
+      navigationBarColor: '#00000000',
+      statusBarContentColor: content,
+      navigationBarContentColor: content
+    };
+    win.setWindowSystemBarProperties(props).catch((e: BusinessError) => {
+      hilog.warn(DOMAIN, TAG, 'setWindowSystemBarProperties failed %{public}s', e.message);
     });
   }
 

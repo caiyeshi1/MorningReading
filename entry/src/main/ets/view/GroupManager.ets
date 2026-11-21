@@ -1,8 +1,8 @@
-import { DEFAULT_GROUP_ID, Group, LibraryStore } from '../common/Library';
+﻿import { DEFAULT_GROUP_ID, Group, LibraryStore } from '../common/Library';
 
-const ACCENT: string = '#1F6FB2';
-const INK: string = '#1B2A41';
-const SUB: string = '#8A93A6';
+const ACCENT: Resource = $r('app.color.accent');
+const INK: Resource = $r('app.color.text_primary');
+const SUB: Resource = $r('app.color.text_secondary');
 
 @Component
 export struct GroupManager {
@@ -69,13 +69,13 @@ export struct GroupManager {
                   .height(40)
                   .fontSize(14)
                   .borderRadius(10)
-                  .backgroundColor('#F7F9FC')
+                  .backgroundColor($r('app.color.bg_card_alt'))
                   .onChange((value: string) => {
                     this.editingName = value;
                   })
                 Text('保存')
                   .fontSize(13)
-                  .fontColor('#FFFFFF')
+                  .fontColor($r('app.color.text_on_accent'))
                   .padding({ left: 12, right: 12, top: 7, bottom: 7 })
                   .borderRadius(10)
                   .backgroundColor(ACCENT)
@@ -107,7 +107,7 @@ export struct GroupManager {
                   .fontColor(ACCENT)
                   .padding({ left: 10, right: 10, top: 6, bottom: 6 })
                   .borderRadius(10)
-                  .backgroundColor('#E8F1FA')
+                  .backgroundColor($r('app.color.accent_soft'))
                   .onClick(() => {
                     this.editingId = g.id;
                     this.editingName = g.name;
@@ -116,10 +116,10 @@ export struct GroupManager {
                 if (g.id !== DEFAULT_GROUP_ID) {
                   Text('删除')
                     .fontSize(12)
-                    .fontColor('#C1651A')
+                    .fontColor($r('app.color.accent_orange'))
                     .padding({ left: 10, right: 10, top: 6, bottom: 6 })
                     .borderRadius(10)
-                    .backgroundColor('#FBF0E6')
+                    .backgroundColor($r('app.color.accent_orange_soft'))
                     .onClick(() => {
                       LibraryStore.get().deleteGroup(g.id);
                       this.tip = '分组已删除，音频已移到默认分组';
@@ -130,7 +130,7 @@ export struct GroupManager {
             .width('100%')
             .padding(12)
             .borderRadius(14)
-            .backgroundColor('#F7F9FC')
+            .backgroundColor($r('app.color.bg_card_alt'))
           }
         }, (g: Group) => g.id + '_' + g.name)
       }
@@ -145,13 +145,13 @@ export struct GroupManager {
           .height(44)
           .fontSize(14)
           .borderRadius(12)
-          .backgroundColor('#F7F9FC')
+          .backgroundColor($r('app.color.bg_card_alt'))
           .onChange((value: string) => {
             this.newName = value;
           })
         Text('添加分组')
           .fontSize(13)
-          .fontColor('#FFFFFF')
+          .fontColor($r('app.color.text_on_accent'))
           .padding({ left: 14, right: 14, top: 12, bottom: 12 })
           .borderRadius(12)
           .backgroundColor(ACCENT)
@@ -170,7 +170,7 @@ export struct GroupManager {
     }
     .width('100%')
     .height('100%')
-    .backgroundColor('#FFFFFF')
+    .backgroundColor($r('app.color.bg_card'))
     .borderRadius({ topLeft: 26, topRight: 26 })
   }
 }
