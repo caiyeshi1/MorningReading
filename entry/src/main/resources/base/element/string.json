@@ -1,0 +1,20 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "晨读美文音频播放器"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "晨读美文"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "晨读美文"
+    },
+    {
+      "name": "reason_background",
+      "value": "锁屏和切换应用时继续播放晨读音频"
+    }
+  ]
+}

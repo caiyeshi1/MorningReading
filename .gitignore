@@ -1,0 +1,38 @@
+# Build outputs
+build/
+**/build/
+.hvigor/
+.cache/
+.preview/
+**/.preview/
+
+# IDE
+.idea/
+**/.idea/
+*.iml
+
+# Dependencies
+oh_modules/
+**/oh_modules/
+
+# Local machine specific
+local.properties
+
+# Signing / secrets
+*.p12
+*.cer
+*.p7b
+*.csr
+*.bak
+signing/
+
+# Release artifacts
+dist/
+*.hap
+*.hsp
+*.har
+
+# Logs / OS files
+*.log
+.DS_Store
+Thumbs.db
