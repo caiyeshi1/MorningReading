@@ -1,4 +1,4 @@
-import uiMaterial from '@ohos.arkui.uiMaterial';
+﻿import uiMaterial from '@ohos.arkui.uiMaterial';
 
 /**
  * 沉浸光感材质（API 26）。
@@ -15,6 +15,13 @@ export function immersiveDialog(): uiMaterial.Material {
 export function immersiveToast(): uiMaterial.Material {
   return new uiMaterial.ImmersiveMaterial({
     style: uiMaterial.ImmersiveStyle.ULTRA_THIN,
+    applyShadow: true
+  });
+}
+
+export function immersiveSheet(): uiMaterial.Material {
+  return new uiMaterial.ImmersiveMaterial({
+    style: uiMaterial.ImmersiveStyle.THICK,
     applyShadow: true
   });
 }

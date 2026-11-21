@@ -170,7 +170,5 @@ export struct GroupManager {
     }
     .width('100%')
     .height('100%')
-    .backgroundColor($r('app.color.bg_card'))
-    .borderRadius({ topLeft: 26, topRight: 26 })
   }
 }

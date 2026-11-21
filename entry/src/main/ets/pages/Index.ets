@@ -8,7 +8,7 @@ import { AudioService } from '../common/AudioService';
 import { ALL_GROUP_ID, Group, LibraryStore, Track } from '../common/Library';
 import { BackgroundStore } from '../common/BackgroundStore';
 import { ThemeStore } from '../common/ThemeStore';
-import { immersiveDialog, immersiveToast } from '../common/UiMaterial';
+import { immersiveDialog, immersiveSheet, immersiveToast } from '../common/UiMaterial';
 import { MiniPlayer } from '../view/MiniPlayer';
 import { PlayerPanel } from '../view/PlayerPanel';
 import { GroupManager } from '../view/GroupManager';
@@ -34,9 +34,8 @@ struct Index {
   @State groupId: string = ALL_GROUP_ID;
   @State keyword: string = '';
   @State wide: boolean = false;
-  @State showSheet: boolean = false;
-  @State showGroups: boolean = false;
-  @State showSettings: boolean = false;
+  @State sheetShown: boolean = false;
+  @State sheetKind: string = '';
   @State avoidTop: number = 0;
   @State avoidBottom: number = 0;
   @State selecting: boolean = false;
@@ -51,19 +50,16 @@ struct Index {
   }
 
   onBackPress(): boolean {
-    if (this.showSettings) {
-      this.showSettings = false;
-      return true;
-    }
-    if (this.showGroups) {
-      this.showGroups = false;
-      return true;
-    }
-    if (this.showSheet) {
-      this.showSheet = false;
+    if (this.sheetShown) {
+      this.sheetShown = false;
       return true;
     }
     return false;
+  }
+
+  private openSheet(kind: string): void {
+    this.sheetKind = kind;
+    this.sheetShown = true;
   }
 
   observeWindow(): void {
@@ -491,7 +487,7 @@ struct Index {
           .borderRadius(12)
           .backgroundColor($r('app.color.bg_card'))
           .onClick(() => {
-            this.showSettings = true;
+            this.openSheet('settings');
           })
 
         Text('+ 导入')
@@ -688,101 +684,74 @@ struct Index {
         MiniPlayer({
           bottomInset: this.avoidBottom,
           onOpen: () => {
-            this.showSheet = true;
+            this.openSheet('player');
           }
         })
       }
 
-      if (!this.wide && this.showSheet) {
-        Scroll() {
-          Column() {
-            PlayerPanel({
-              inSheet: true,
-              onClose: () => {
-                this.showSheet = false;
-              }
-            })
-          }
-          .padding({ bottom: 20 + this.avoidBottom })
-        }
-        .width('100%')
-        .height('100%')
-        .backgroundColor($r('app.color.bg_card'))
-        .borderRadius({ topLeft: 26, topRight: 26 })
-        .scrollBar(BarState.Off)
-        .transition(TransitionEffect.move(TransitionEdge.BOTTOM)
-          .combine(TransitionEffect.OPACITY)
-          .animation({ duration: 300, curve: Curve.FastOutSlowIn }))
-      }
-
-      if (this.showGroups) {
-        Stack({ alignContent: Alignment.Bottom }) {
-          Column()
-            .width('100%')
-            .height('100%')
-            .backgroundColor($r('app.color.bg_dim'))
-            .onClick(() => {
-              this.showGroups = false;
-            })
-          Column() {
-            GroupManager({
-              bottomInset: this.avoidBottom,
-              onClose: () => {
-                this.showGroups = false;
-              }
-            })
-          }
-          .width('100%')
-          .height('72%')
-        }
-        .width('100%')
-        .height('100%')
-        .transition(TransitionEffect.OPACITY
-          .combine(TransitionEffect.translate({ y: 320 }))
-          .animation({ duration: 280, curve: Curve.FastOutSlowIn }))
-      }
-
-      if (this.showSettings) {
-        Stack({ alignContent: Alignment.Bottom }) {
-          Column()
-            .width('100%')
-            .height('100%')
-            .backgroundColor($r('app.color.bg_dim'))
-            .onClick(() => {
-              this.showSettings = false;
-            })
-          Column() {
-            SettingsPanel({
-              bottomInset: this.avoidBottom,
-              onClose: () => {
-                this.showSettings = false;
-              },
-              onGroups: () => {
-                this.showSettings = false;
-                this.showGroups = true;
-              },
-              onBatch: () => {
-                this.showSettings = false;
-                this.enterSelect('');
-              },
-              onImport: () => {
-                this.showSettings = false;
-                this.importAudio();
-              }
-            })
-          }
-          .width('100%')
-          .height('92%')
-          .transition(TransitionEffect.move(TransitionEdge.BOTTOM)
-            .animation({ duration: 300, curve: Curve.FastOutSlowIn }))
-        }
-        .width('100%')
-        .height('100%')
-        .transition(TransitionEffect.OPACITY.animation({ duration: 220, curve: Curve.EaseOut }))
-      }
     }
     .width('100%')
     .height('100%')
     .backgroundColor($r('app.color.bg_page'))
+    .bindSheet($$this.sheetShown, this.SheetContent(), {
+      height: SheetSize.LARGE,
+      showClose: false,
+      dragBar: true,
+      preferType: SheetType.BOTTOM,
+      systemMaterial: immersiveSheet()
+    })
+  }
+
+  @Builder
+  SheetContent() {
+    if (this.sheetKind === 'settings') {
+      Column() {
+        SettingsPanel({
+          bottomInset: this.avoidBottom,
+          onClose: () => {
+            this.sheetShown = false;
+          },
+          onGroups: () => {
+            this.sheetKind = 'groups';
+          },
+          onBatch: () => {
+            this.sheetShown = false;
+            this.enterSelect('');
+          },
+          onImport: () => {
+            this.sheetShown = false;
+            this.importAudio();
+          }
+        })
+      }
+      .width('100%')
+      .height('100%')
+    } else if (this.sheetKind === 'groups') {
+      Column() {
+        GroupManager({
+          bottomInset: this.avoidBottom,
+          onClose: () => {
+            this.sheetShown = false;
+          }
+        })
+      }
+      .width('100%')
+      .height('100%')
+    } else {
+      Scroll() {
+        Column() {
+          PlayerPanel({
+            inSheet: true,
+            onClose: () => {
+              this.sheetShown = false;
+            }
+          })
+        }
+        .padding({ bottom: 20 + this.avoidBottom })
+      }
+      .width('100%')
+      .height('100%')
+      .scrollBar(BarState.Off)
+    }
   }
 }

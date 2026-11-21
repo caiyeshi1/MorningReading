@@ -399,7 +399,5 @@ export struct SettingsPanel {
     }
     .width('100%')
     .height('100%')
-    .backgroundColor($r('app.color.bg_page'))
-    .borderRadius({ topLeft: 26, topRight: 26 })
   }
 }
