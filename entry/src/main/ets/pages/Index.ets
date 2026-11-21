@@ -8,6 +8,7 @@ import { AudioService } from '../common/AudioService';
 import { ALL_GROUP_ID, Group, LibraryStore, Track } from '../common/Library';
 import { BackgroundStore } from '../common/BackgroundStore';
 import { ThemeStore } from '../common/ThemeStore';
+import { immersiveDialog, immersiveToast } from '../common/UiMaterial';
 import { MiniPlayer } from '../view/MiniPlayer';
 import { PlayerPanel } from '../view/PlayerPanel';
 import { GroupManager } from '../view/GroupManager';
@@ -189,14 +190,14 @@ struct Index {
       }
       const count: number = await LibraryStore.get().importUris(uris);
       if (count > 0) {
-        promptAction.showToast({ message: `已导入 ${count} 个音频` });
+        promptAction.showToast({ message: `已导入 ${count} 个音频`, systemMaterial: immersiveToast() });
       } else {
-        promptAction.showToast({ message: '导入失败，请重试' });
+        promptAction.showToast({ message: '导入失败，请重试', systemMaterial: immersiveToast() });
       }
     } catch (e) {
       const err = e as BusinessError;
       hilog.error(DOMAIN, TAG, 'import failed %{public}s', err.message);
-      promptAction.showToast({ message: '导入失败，请重试' });
+      promptAction.showToast({ message: '导入失败，请重试', systemMaterial: immersiveToast() });
     }
   }
 
@@ -286,24 +287,25 @@ struct Index {
   private moveSelected(groupId: string): void {
     const ids: string[] = this.selectedIds;
     if (ids.length === 0) {
-      promptAction.showToast({ message: '请先选择音频' });
+      promptAction.showToast({ message: '请先选择音频', systemMaterial: immersiveToast() });
       return;
     }
     LibraryStore.get().moveTracks(ids, groupId);
-    promptAction.showToast({ message: `已移动 ${ids.length} 个音频` });
+    promptAction.showToast({ message: `已移动 ${ids.length} 个音频`, systemMaterial: immersiveToast() });
     this.exitSelect();
   }
 
   private confirmDeleteSelected(): void {
     const count: number = this.selectedIds.length;
     if (count === 0) {
-      promptAction.showToast({ message: '请先选择音频' });
+      promptAction.showToast({ message: '请先选择音频', systemMaterial: immersiveToast() });
       return;
     }
     AlertDialog.show({
       title: '删除音频',
       message: `确定删除选中的 ${count} 个音频？文件会一并删除，无法恢复。`,
       autoCancel: true,
+      systemMaterial: immersiveDialog(),
       primaryButton: {
         value: '取消',
         action: () => {
@@ -336,7 +338,7 @@ struct Index {
       }
     }
     this.exitSelect();
-    promptAction.showToast({ message: `已删除 ${ids.length} 个音频` });
+    promptAction.showToast({ message: `已删除 ${ids.length} 个音频`, systemMaterial: immersiveToast() });
   }
 
   private removeTrack(item: Track): void {
@@ -351,7 +353,7 @@ struct Index {
         AudioService.get().load(first, false);
       }
     }
-    promptAction.showToast({ message: '已删除音频' });
+    promptAction.showToast({ message: '已删除音频', systemMaterial: immersiveToast() });
   }
 
   @Builder

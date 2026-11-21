@@ -7,6 +7,7 @@ import { AudioService } from '../common/AudioService';
 import { BackgroundStore } from '../common/BackgroundStore';
 import { LibraryStore } from '../common/Library';
 import { THEME_DARK, THEME_LIGHT, THEME_SYSTEM, ThemeStore } from '../common/ThemeStore';
+import { immersiveToast } from '../common/UiMaterial';
 
 const DOMAIN: number = 0x0100;
 const TAG: string = 'Settings';
@@ -90,11 +91,11 @@ export struct SettingsPanel {
         return;
       }
       const ok: boolean = await BackgroundStore.get().setFromUri(result.photoUris[0]);
-      promptAction.showToast({ message: ok ? '背景已更新' : '设置背景失败，请重试' });
+      promptAction.showToast({ message: ok ? '背景已更新' : '设置背景失败，请重试', systemMaterial: immersiveToast() });
     } catch (e) {
       const err = e as BusinessError;
       hilog.error(DOMAIN, TAG, 'pick background failed %{public}s', err.message);
-      promptAction.showToast({ message: '设置背景失败，请重试' });
+      promptAction.showToast({ message: '设置背景失败，请重试', systemMaterial: immersiveToast() });
     }
   }
 
@@ -327,7 +328,7 @@ export struct SettingsPanel {
                 .padding({ top: 13, bottom: 13 })
                 .onClick(() => {
                   BackgroundStore.get().clear();
-                  promptAction.showToast({ message: '已恢复默认背景' });
+                  promptAction.showToast({ message: '已恢复默认背景', systemMaterial: immersiveToast() });
                 })
             }
           }
