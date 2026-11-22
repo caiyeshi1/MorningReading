@@ -128,11 +128,15 @@ export struct GroupManager {
               }
             }
             .width('100%')
-            .padding(12)
-            .borderRadius(14)
-            .backgroundColor($r('app.color.bg_card_alt'))
-          }
-        }, (g: Group) => g.id + '_' + g.name)
+              .padding(12)
+              .borderRadius(14)
+              .backgroundColor($r('app.color.bg_card_alt'))
+              .animation({ duration: 180, curve: Curve.EaseOut })
+            }
+            .transition(TransitionEffect.OPACITY
+              .combine(TransitionEffect.translate({ y: 12 }))
+              .animation({ duration: 240, curve: Curve.FastOutSlowIn }))
+          }, (g: Group) => g.id + '_' + g.name)
       }
       .layoutWeight(1)
       .width('100%')

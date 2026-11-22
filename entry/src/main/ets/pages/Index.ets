@@ -520,9 +520,12 @@ struct Index {
               this.exitSelect();
             })
         }
-        .width('100%')
-        .padding({ left: 20, right: 20, top: 16 + this.avoidTop, bottom: 12 })
-      } else {
+          .width('100%')
+          .padding({ left: 20, right: 20, top: 16 + this.avoidTop, bottom: 12 })
+          .transition(TransitionEffect.OPACITY
+            .combine(TransitionEffect.translate({ y: -12 }))
+            .animation({ duration: 220, curve: Curve.FastOutSlowIn }))
+        } else {
       Row({ space: 6 }) {
         Column({ space: 3 }) {
           Text('晨读美文')
@@ -558,9 +561,12 @@ struct Index {
           .backgroundColor(ACCENT)
           .bindMenu(this.importMenu())
       }
-      .width('100%')
-      .padding({ left: 20, right: 20, top: 16 + this.avoidTop, bottom: 12 })
-      }
+        .width('100%')
+        .padding({ left: 20, right: 20, top: 16 + this.avoidTop, bottom: 12 })
+        .transition(TransitionEffect.OPACITY
+          .combine(TransitionEffect.translate({ y: -12 }))
+          .animation({ duration: 220, curve: Curve.FastOutSlowIn }))
+        }
 
       TextInput({ placeholder: '搜索音频名称', text: this.keyword })
         .height(42)
@@ -788,6 +794,9 @@ struct Index {
       }
       .width('100%')
       .height('100%')
+      .transition(TransitionEffect.OPACITY
+        .combine(TransitionEffect.translate({ x: 24 }))
+        .animation({ duration: 260, curve: Curve.FastOutSlowIn }))
     } else if (this.sheetKind === 'groups') {
       Column() {
         GroupManager({
@@ -799,6 +808,9 @@ struct Index {
       }
       .width('100%')
       .height('100%')
+      .transition(TransitionEffect.OPACITY
+        .combine(TransitionEffect.translate({ x: 24 }))
+        .animation({ duration: 260, curve: Curve.FastOutSlowIn }))
     } else {
       Scroll() {
         Column() {
@@ -814,6 +826,9 @@ struct Index {
       .width('100%')
       .height('100%')
       .scrollBar(BarState.Off)
+      .transition(TransitionEffect.OPACITY
+        .combine(TransitionEffect.translate({ x: 24 }))
+        .animation({ duration: 260, curve: Curve.FastOutSlowIn }))
     }
   }
 }

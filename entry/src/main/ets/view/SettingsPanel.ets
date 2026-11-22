@@ -261,6 +261,9 @@ export struct SettingsPanel {
                   .fontSize(11)
                   .fontColor(SUB)
                   .width('100%')
+                  .transition(TransitionEffect.OPACITY
+                    .combine(TransitionEffect.translate({ y: -6 }))
+                    .animation({ duration: 200, curve: Curve.EaseOut }))
               }
             }
             .width('100%')
@@ -324,12 +327,17 @@ export struct SettingsPanel {
             .padding({ top: 12, bottom: 12 })
 
             if (this.bgVersion >= 0 && this.bgText() === '已自定义') {
-              Divider().color($r('app.color.divider'))
+              Divider()
+                .color($r('app.color.divider'))
+                .transition(TransitionEffect.OPACITY.animation({ duration: 200 }))
               Text('恢复默认背景')
                 .fontSize(14)
                 .fontColor($r('app.color.accent_orange'))
                 .width('100%')
                 .padding({ top: 13, bottom: 13 })
+                .transition(TransitionEffect.OPACITY
+                  .combine(TransitionEffect.translate({ y: -8 }))
+                  .animation({ duration: 220, curve: Curve.EaseOut }))
                 .onClick(() => {
                   BackgroundStore.get().clear();
                   promptAction.showToast({ message: '已恢复默认背景', systemMaterial: immersiveToast() });
